@@ -96,7 +96,10 @@ function fixShortcut(name) {
  */
 function createIcon(options, enableTooltips, shortcuts) {
 	options = options || {};
-	var el = document.createElement("a");
+	var el = document.createElement("md-button");
+	var icon = document.createElement("md-icon");
+	icon.className = "material-icons";
+	icon.innerHTML = options.iconClass;
 	enableTooltips = (enableTooltips == undefined) ? true : enableTooltips;
 
 	if(options.title && enableTooltips) {
@@ -108,6 +111,7 @@ function createIcon(options, enableTooltips, shortcuts) {
 		}
 	}
 
+	el.appendChild(icon);
 	el.tabIndex = -1;
 	el.className = options.className;
 	return el;
@@ -1479,6 +1483,7 @@ SimpleMDE.prototype.render = function(el) {
 		mode.gitHubSpice = false;
 	}
 
+	this.myCodeMirror = CodeMirror;
 	this.codemirror = CodeMirror.fromTextArea(el, {
 		mode: mode,
 		backdrop: backdrop,
@@ -1735,7 +1740,10 @@ SimpleMDE.prototype.createToolbar = function(items) {
 			(function(key) {
 				var el = toolbarData[key];
 				if(stat[key]) {
-					el.className += " active";
+					//added this because it was adding class many times.
+					if(el.className.indexOf("active") < 0) {
+						el.className += " active";
+					}
 				} else if(key != "fullscreen" && key != "side-by-side") {
 					el.className = el.className.replace(/\s*active\s*/g, "");
 				}
@@ -1879,6 +1887,7 @@ SimpleMDE.prototype.value = function(val) {
 /**
  * Bind static methods for exports.
  */
+SimpleMDE.markdown = SimpleMDE.prototype.markdown;
 SimpleMDE.toggleBold = toggleBold;
 SimpleMDE.toggleItalic = toggleItalic;
 SimpleMDE.toggleStrikethrough = toggleStrikethrough;
